@@ -70,6 +70,7 @@ if config_env() == :prod do
     ],
     check_origin: [
       "https://9-9.site",
+      "https://nine-9.onrender.com",
       "https://go-game.fly.dev",
       "//*.gigalixirapp.com"
     ],
