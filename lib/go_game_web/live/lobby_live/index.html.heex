@@ -1,0 +1,127 @@
+<div class="flex flex-col md:flex-row h-screen bg-[#f3ead7]">
+  <!-- Left Sidebar: Online Users -->
+  <div class="w-full md:w-64 bg-[#e8e0c5] border-b md:border-r md:border-b-0 border-[#d8cbb3] p-4 overflow-y-auto max-h-48 md:max-h-none">
+    <h2 class="text-xl font-serif text-[#5e4b35] mb-4 font-bold">Online Players</h2>
+
+    <ul>
+      <%= for user <- @online_users do %>
+        <li class="mb-3 p-2 bg-[#fdfaf5] rounded shadow-sm">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[#5e4b35] font-medium truncate flex-1" title={user.username}>
+              {if String.starts_with?(user.username, "Guest_"), do: "Guest", else: user.username}
+              <%= if user.user_id == @current_user_id do %>
+                <span class="text-xs text-gray-500">(You)</span>
+              <% end %>
+            </span>
+            
+<!-- Status Badge -->
+            <span class={[
+              "text-xs px-2 py-0.5 rounded-full font-bold",
+              user.status == :playing && "bg-red-100 text-red-700",
+              user.status == :online && "bg-green-100 text-green-700"
+            ]}>
+              {if user.status == :online, do: "Online", else: "Playing"}
+            </span>
+          </div>
+          
+<!-- Invite Button (only show for other users who are online) -->
+          <%= if user.user_id != @current_user_id and user.status == :online do %>
+            <button
+              phx-click="invite_player"
+              phx-value-user-id={user.user_id}
+              phx-value-username={user.username}
+              class="w-full bg-[#dcb35c] hover:bg-[#cda24b] text-[#5e4b35] text-sm font-semibold py-1 px-3 rounded transition"
+            >
+              Invite to play
+            </button>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  
+<!-- Main Content Area -->
+  <div class="flex-1 p-4 md:p-8 overflow-y-auto">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-2xl md:text-4xl font-serif text-[#5e4b35] mb-4 md:mb-8 text-center">
+        Go Lobby (9×9)
+      </h1>
+      
+<!-- Active/Pending Games List -->
+      <%= if Enum.empty?(@pending_games) do %>
+        <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg border border-[#d8cbb3] text-center mb-6">
+          <p class="text-base md:text-lg text-gray-600 mb-4">
+            No active games. Invite someone to start playing!
+          </p>
+        </div>
+      <% else %>
+        <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg border border-[#d8cbb3] mb-6">
+          <h2 class="text-xl md:text-2xl font-serif text-[#5e4b35] mb-4">Your Games</h2>
+
+          <div class="space-y-3">
+            <%= for game <- @pending_games do %>
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between p-4 bg-[#fdfaf5] rounded border border-[#d8cbb3] gap-3">
+                <div class="flex-1">
+                  <div class="flex items-center flex-wrap gap-2 mb-1">
+                    <span class="font-bold text-[#5e4b35]">
+                      {if String.starts_with?(game.black_player.username, "Guest_"),
+                        do: "Guest",
+                        else: game.black_player.username}
+                    </span>
+                    <span class="text-gray-500">vs</span>
+                    <span class="font-bold text-[#5e4b35]">
+                      {if String.starts_with?(game.white_player.username, "Guest_"),
+                        do: "Guest",
+                        else: game.white_player.username}
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    Status:
+                    <span class="font-semibold">
+                      {if game.status == "pending", do: "Waiting", else: "In Progress"}
+                    </span>
+                  </div>
+                </div>
+
+                <%= if game.status == "pending" do %>
+                  <%= if game.black_player_id == @current_user_id do %>
+                    <!-- Player A (inviter) - show waiting message -->
+                    <div class="text-sm text-gray-500 italic py-2 px-4">
+                      Waiting for opponent to accept...
+                    </div>
+                  <% else %>
+                    <!-- Player B (invited) - show accept/refuse buttons -->
+                    <div class="flex gap-2">
+                      <button
+                        phx-click="accept_invitation"
+                        phx-value-game-id={game.id}
+                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow transition"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        phx-click="refuse_invitation"
+                        phx-value-game-id={game.id}
+                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow transition"
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  <% end %>
+                <% else %>
+                  <!-- In-progress game - show continue button -->
+                  <.link
+                    navigate={~p"/game/#{game.id}"}
+                    class="bg-[#dcb35c] hover:bg-[#cda24b] text-[#5e4b35] font-semibold py-2 px-6 rounded shadow transition text-center"
+                  >
+                    Continue
+                  </.link>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

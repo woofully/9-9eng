@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-[#f3ead7] flex flex-col justify-center items-center font-serif text-[#5e4b35]">
+  
+<!-- Main Card -->
+  <div class="bg-white p-12 rounded-xl shadow-2xl border-2 border-[#d8cbb3] max-w-lg w-full text-center relative overflow-hidden">
+    
+<!-- Decorative Circle in Background -->
+    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#f8f4e9] rounded-full z-0"></div>
+    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-[#f8f4e9] rounded-full z-0"></div>
+
+    <div class="relative z-10">
+      <!-- Title -->
+      <h1 class="text-6xl font-bold mb-2 tracking-tight">9×9 GO</h1>
+      <p class="text-xl opacity-75 mb-10 italic">Real-time Strategy Board Game</p>
+      
+<!-- Action Buttons -->
+      <div class="space-y-4">
+        
+<!-- Log In Button -->
+        <.link href={~p"/users/log-in"} class="block w-full group relative">
+          <div class="absolute inset-0 bg-[#b59248] rounded-lg transform translate-y-1 transition group-hover:translate-y-1.5">
+          </div>
+          <div class="relative bg-[#dcb35c] hover:bg-[#cda24b] text-[#5e4b35] font-bold text-xl py-4 rounded-lg border border-[#b59248] transform active:translate-y-1 transition">
+            Log In
+          </div>
+        </.link>
+        
+<!-- Register Button -->
+        <.link href={~p"/users/register"} class="block w-full group relative">
+          <div class="absolute inset-0 bg-[#d8cbb3] rounded-lg transform translate-y-1 transition group-hover:translate-y-1.5">
+          </div>
+          <div class="relative bg-[#f0e6d2] hover:bg-[#e8dec8] text-[#5e4b35] font-bold text-xl py-4 rounded-lg border border-[#c0b090] transform active:translate-y-1 transition">
+            Create Account
+          </div>
+        </.link>
+      </div>
+    </div>
+  </div>
+  
+<!-- Footer Info -->
+  <div class="mt-8 text-sm opacity-60">
+    <p>Play instantly with friends • No installation required</p>
+  </div>
+</div>

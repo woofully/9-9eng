@@ -1,0 +1,28 @@
+<main class="w-full min-h-screen relative">
+  <!-- Header with User Menu -->
+  <%= if assigns[:current_scope] && assigns.current_scope.user do %>
+    <header class="sticky top-0 z-40 bg-[#f3ead7] border-b border-[#d8cbb3] shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo/Title -->
+        <a href="/lobby" class="flex items-center gap-2">
+          <span class="text-2xl font-serif text-[#5e4b35] font-bold">9×9 Go</span>
+        </a>
+        
+<!-- User Menu -->
+        <.user_menu current_user={@current_scope.user} />
+      </div>
+    </header>
+  <% end %>
+  
+<!-- Manual Flash Messages -->
+  <div class="fixed top-20 right-4 z-50 w-full max-w-sm pointer-events-none">
+    <div class="pointer-events-auto space-y-2">
+      <.flash_group flash={@flash} />
+    </div>
+  </div>
+  
+<!-- The Page Content -->
+  <!-- We use assigns[:inner_content] to safely check if it exists.
+       If not, we render the @inner_block slot. -->
+  {assigns[:inner_content] || render_slot(@inner_block)}
+</main>
